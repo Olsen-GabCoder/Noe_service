@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Entrepots ───────────────────────────────────────────
+model Warehouse {
+  id        String   @id @default(cuid())
+  code      String   @unique // LBV, POG, FCV
+  label     String
+  createdAt DateTime @default(now())
+
+  products  Product[]
+  movements Movement[]
+  users     User[]
+
+  @@map("warehouses")
+}
+
+// ─── Categories ──────────────────────────────────────────
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique // alim, mat, ent, bur, emb, div
+  label     String
+  color     String
+  icon      String
+  createdAt DateTime @default(now())
+
+  products  Product[]
+
+  @@map("categories")
+}
+
+// ─── Produits ────────────────────────────────────────────
+model Product {
+  id          String   @id @default(cuid())
+  sku         String   @unique
+  name        String
+  price       Int      // en FCFA
+  qty         Int      @default(0)
+  threshold   Int      @default(10)
+  unit        String   // sac, bidon, carton, pack, unite, set, ramette, boite, rouleau
+  trend       Int      @default(0)
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
+
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+
+  movements   Movement[]
+  notifications Notification[]
+
+  @@map("products")
+}
+
+// ─── Utilisateurs ────────────────────────────────────────
+enum Role {
+  admin
+  gestionnaire
+  collaborateur
+  comptable
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  role      Role     @default(collaborateur)
+  avatarInitials String @default("??")
+  avatarColor    String @default("#64748B")
+  online    Boolean  @default(false)
+  lastSeen  DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  warehouseId String?
+  warehouse   Warehouse? @relation(fields: [warehouseId], references: [id])
+
+  movements         Movement[]
+  cadrageResponses  CadrageResponse[]
+
+  @@map("users")
+}
+
+// ─── Mouvements de stock ─────────────────────────────────
+enum MovementType {
+  in
+  out
+}
+
+model Movement {
+  id        String       @id @default(cuid())
+  ref       String       @unique // BL-xxxx, V-xxxx
+  type      MovementType
+  qty       Int
+  note      String?      @db.Text
+  date      DateTime     @default(now())
+  createdAt DateTime     @default(now())
+
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id])
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
+
+  @@map("movements")
+}
+
+// ─── Reponses questionnaire de cadrage ───────────────────
+model CadrageResponse {
+  id          String   @id @default(cuid())
+  respondent  String   // nom ou email de la personne
+  responses   String   @db.LongText // JSON des reponses
+  progress    Int      @default(0) // pourcentage de completion
+  submittedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@map("cadrage_responses")
+}
+
+// ─── Notifications ───────────────────────────────────────
+enum NotificationType {
+  rupture
+  low
+  task
+  movement
+  login
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  detail    String           @db.Text
+  read      Boolean          @default(false)
+  date      DateTime         @default(now())
+  createdAt DateTime         @default(now())
+
+  productId String?
+  product   Product?         @relation(fields: [productId], references: [id])
+
+  @@map("notifications")
+}
