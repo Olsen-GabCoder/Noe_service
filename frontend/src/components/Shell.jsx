@@ -173,7 +173,8 @@ export function Topbar({ title, subtitle, onToggleSidebar, search, setSearch, on
     const doSearch = async () => {
       try {
         const token = localStorage.getItem('noe_token');
-        const res = await fetch(`http://localhost:4000/api/products?search=${encodeURIComponent(search)}`, {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+        const res = await fetch(`${apiUrl}/products?search=${encodeURIComponent(search)}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 function getToken() {
   return localStorage.getItem('noe_token');
@@ -167,7 +167,7 @@ export async function fetchAllCadrageResponses() {
 
 export async function exportCadrageResponses() {
   const token = localStorage.getItem('noe_token');
-  const res = await fetch('http://localhost:4000/api/cadrage/export', {
+  const res = await fetch(`${API_URL}/cadrage/export`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   const blob = await res.blob();

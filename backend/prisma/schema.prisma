@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -122,7 +122,7 @@ model Movement {
 model CadrageResponse {
   id          String   @id @default(cuid())
   respondent  String   // nom ou email de la personne
-  responses   String   @db.LongText // JSON des reponses
+  responses   String   @db.Text // JSON des reponses
   progress    Int      @default(0) // pourcentage de completion
   submittedAt DateTime?
   createdAt   DateTime @default(now())
