@@ -97,15 +97,23 @@ export function LoginScreen() {
       </div>
 
       {/* RIGHT - form */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px' }}>
+      <div className="login-form-panel" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px' }}>
         <div style={{ width: '100%', maxWidth: 400 }}>
+          {/* Logo mobile - visible only when brand panel is hidden */}
+          <div className="login-mobile-logo" style={{ display: 'none', alignItems: 'center', gap: 12, marginBottom: 24 }}>
+            <LogoMark size={40}/>
+            <div>
+              <div style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--navy-900)' }}>NOE Services</div>
+              <div style={{ fontSize: 10, color: 'var(--ink-500)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Plateforme de stock</div>
+            </div>
+          </div>
           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--orange-600)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 8 }}>
             Bienvenue
           </div>
           <h2 style={{ margin: 0, fontSize: 30, fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--ink-900)' }}>
             Connexion à votre espace
           </h2>
-          <p style={{ marginTop: 8, fontSize: 14, color: 'var(--ink-500)' }}>
+          <p className="login-subtitle" style={{ marginTop: 8, fontSize: 14, color: 'var(--ink-500)' }}>
             Entrez vos identifiants pour accéder au stock.
           </p>
 

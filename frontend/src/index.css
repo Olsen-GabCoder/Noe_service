@@ -199,8 +199,15 @@ input, select, textarea { font-family: inherit; }
   .grid-detail { grid-template-columns: 1fr !important; }
 
   /* Login */
-  .login-grid { grid-template-columns: 1fr !important; }
+  .login-grid { grid-template-columns: 1fr !important; min-height: 100vh !important; }
   .login-brand { display: none !important; }
+  .login-form-panel {
+    padding: 24px 20px !important;
+    align-items: flex-start !important;
+  }
+  .login-form-panel h2 { font-size: 24px !important; }
+  .login-form-panel .login-subtitle { font-size: 13px !important; }
+  .login-mobile-logo { display: flex !important; }
 
   /* Hero */
   .hero-actions { flex-direction: column; }
