@@ -31,8 +31,9 @@ async function main() {
 
   // --- Users (Gabon) ---
   const hashedPw = await bcrypt.hash('noeservices2024', 10);
+  const hashedAdminPw = await bcrypt.hash('NoeAdmin@2024!', 10);
   const userData = [
-    { name: 'Admin Noe Services', email: 'admin@noeservices.ga',     role: 'admin',         phone: '+241 077 12 34 56', avatarInitials: 'NS', avatarColor: '#1B4F8C', warehouse: 'all' },
+    { name: 'Admin Noe Services', email: 'admin@noeservices.ga',     role: 'admin',         phone: '+241 077 12 34 56', avatarInitials: 'NS', avatarColor: '#1B4F8C', warehouse: 'all', isAdmin: true },
     { name: 'Ornella Mba',       email: 'ornella@noeservices.ga',    role: 'gestionnaire',  phone: '+241 066 88 99 11', avatarInitials: 'OM', avatarColor: '#1F9D6B', warehouse: 'libreville' },
     { name: 'Steeve Ndong',      email: 'steeve@noeservices.ga',     role: 'gestionnaire',  phone: '+241 074 55 44 33', avatarInitials: 'SN', avatarColor: '#7C3AED', warehouse: 'portgentil' },
     { name: 'Junior Obame',      email: 'junior@noeservices.ga',     role: 'collaborateur', phone: '+241 062 22 33 44', avatarInitials: 'JO', avatarColor: '#F39200', warehouse: 'franceville' },
@@ -43,9 +44,9 @@ async function main() {
     userData.map(u =>
       prisma.user.upsert({
         where: { email: u.email },
-        update: {},
+        update: { password: u.isAdmin ? hashedAdminPw : hashedPw },
         create: {
-          name: u.name, email: u.email, password: hashedPw,
+          name: u.name, email: u.email, password: u.isAdmin ? hashedAdminPw : hashedPw,
           phone: u.phone, role: u.role,
           avatarInitials: u.avatarInitials, avatarColor: u.avatarColor,
           warehouseId: u.warehouse === 'all' ? null : whBySlug[u.warehouse].id,
