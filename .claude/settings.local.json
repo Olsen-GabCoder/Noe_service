@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(find /c/noe_services/frontend/src -type f \\\\\\( -name \"*.jsx\" -o -name \"*.js\" \\\\\\) ! -path \"*/node_modules/*\" -exec wc -l {} +)"
     ]
   }
 }
